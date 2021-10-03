@@ -1,0 +1,8 @@
+[build]
+command = """
+mkdir functions &&
+cargo build --release &&
+cp target/release/querystring functions/
+"""
+publish = "public"
+functions = "functions"
