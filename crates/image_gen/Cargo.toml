@@ -9,3 +9,5 @@ edition = "2018"
 serde = { version = "1.0.130", features = ["derive"] }
 tokio = { version = "1.11.0", features = ["full"] }
 lamedh_http = "0.3.0"
+playwright = "0.0.18"
+base64 = "0.13.0"
