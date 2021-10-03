@@ -1,2 +1,5 @@
 target
 bins
+
+# Local Netlify folder
+.netlify

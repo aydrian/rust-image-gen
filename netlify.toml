@@ -2,7 +2,7 @@
 command = """
 mkdir functions &&
 cargo build --release &&
-cp target/release/querystring functions/
+cp target/release/image_gen functions/
 """
 publish = "public"
 functions = "functions"
