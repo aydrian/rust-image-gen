@@ -50,7 +50,7 @@ async fn handler(_: Value, _: Context) -> Result<Value, Error> {
             "Content-Type": "image/png",
             "Content-Length": data.len().to_string()
         },
-        "statusCode": StatusCode::OK.to_string(),
+        "statusCode": StatusCode::OK.as_u16(),
         "body": base64::encode(data),
         "isBase64Encoded": true
     }))
