@@ -44,6 +44,9 @@ async fn handler(_: Value, _: Context) -> Result<Value, Error> {
     writer.paint().expect("coulnd't paint");
 
     let data = writer.into_vec().unwrap();
+    println!("Vec<u8>:  {:?}", data);
+    let encoded_data = base64::encode(data);
+    println!("base64 string: {:?}", encoded_data);
 
     Ok(json!({
         "headers": {
@@ -51,7 +54,7 @@ async fn handler(_: Value, _: Context) -> Result<Value, Error> {
             "Content-Length": data.len().to_string()
         },
         "statusCode": StatusCode::OK.as_u16(),
-        "body": base64::encode(data),
+        "body": encoded_data,
         "isBase64Encoded": true
     }))
 }
