@@ -3,35 +3,44 @@ use lamedh_http::{
     lambda::{lambda, Context, Error},
     IntoResponse, Request, Response,
 };
-use playwright::Playwright;
+use og_image_writer::{style, writer::OGImageWriter};
 
 #[lambda(http)]
 #[tokio::main]
 async fn main(_request: Request, _: Context) -> Result<impl IntoResponse, Error> {
-    let playwright = Playwright::initialize().await.unwrap();
-    playwright.install_chromium().unwrap(); // Install browsers
-    let chromium = playwright.chromium();
-    let browser = chromium.launcher().headless(true).launch().await.unwrap();
-    let context = browser.context_builder().build().await.unwrap();
-    let page = context.new_page().await.unwrap();
-    page.set_viewport_size(playwright::api::Viewport {
+    let text = "This is Open Graphic Image Writer for Web Developer.";
+
+    let mut writer = OGImageWriter::new(style::WindowStyle {
         width: 1200,
         height: 630,
+        background_color: Some(style::Rgba([70, 40, 90, 255])),
+        align_items: style::AlignItems::Center,
+        justify_content: style::JustifyContent::Center,
+        ..style::WindowStyle::default()
     })
-    .await
     .unwrap();
-    page.set_content_builder("<html><body><h1>Hello World</h1><p>This is a test</p></body></html>")
-        .set_content()
-        .await
-        .unwrap();
-    /*page.add_script_tag_builder(&format!(
-        "window.image = \"{}\";\nwindow.username = \"{}\";",
-        &res.avatar_url, &res.login
-    ))
-    .add_script_tag()
-    .await
-    .unwrap();*/
-    let data = page.screenshot_builder().screenshot().await.unwrap();
+
+    let font = Vec::from(include_bytes!("../fonts/Mplus1-Black.ttf") as &[u8]);
+
+    writer
+        .set_text(
+            text,
+            style::Style {
+                margin: style::Margin(0, 20, 0, 20),
+                line_height: 1.8,
+                font_size: 100.,
+                word_break: style::WordBreak::Normal,
+                color: style::Rgba([255, 255, 255, 255]),
+                text_align: style::TextAlign::Start,
+                ..style::Style::default()
+            },
+            font,
+        )
+        .expect("couldn't set text");
+
+    writer.paint().expect("coulnd't paint");
+
+    let data = writer.into_vec().unwrap();
 
     Ok(Response::builder()
         .status(StatusCode::OK)

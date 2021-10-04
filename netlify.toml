@@ -6,3 +6,6 @@ cp target/release/image_gen functions/
 """
 publish = "public"
 functions = "functions"
+
+[functions]
+included_files = ["crates/image_gen/fonts/*"]
