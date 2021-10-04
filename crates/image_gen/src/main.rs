@@ -1,13 +1,16 @@
-use lamedh_http::{
-    http::StatusCode,
-    lambda::{lambda, Context, Error},
-    IntoResponse, Request, Response,
-};
+use http::StatusCode;
+use lambda_runtime::{handler_fn, Context, Error};
 use og_image_writer::{style, writer::OGImageWriter};
+use serde_json::{json, Value};
 
-#[lambda(http)]
 #[tokio::main]
-async fn main(_request: Request, _: Context) -> Result<impl IntoResponse, Error> {
+async fn main() -> Result<(), Error> {
+    let handler_fn = handler_fn(handler);
+    lambda_runtime::run(handler_fn).await?;
+    Ok(())
+}
+
+async fn handler(_: Value, _: Context) -> Result<Value, Error> {
     let text = "This is Open Graphic Image Writer for Web Developer.";
 
     let mut writer = OGImageWriter::new(style::WindowStyle {
@@ -42,10 +45,13 @@ async fn main(_request: Request, _: Context) -> Result<impl IntoResponse, Error>
 
     let data = writer.into_vec().unwrap();
 
-    Ok(Response::builder()
-        .status(StatusCode::OK)
-        .header("Content-Type", "image/png")
-        .header("Content-Length", data.len().to_string())
-        .body(base64::encode(data))
-        .unwrap())
+    Ok(json!({
+        "headers": {
+            "Content-Type": "image/png",
+            "Content-Length": data.len().to_string()
+        },
+        "statusCode": StatusCode::OK.to_string(),
+        "body": base64::encode(data),
+        "isBase64Encoded": true
+    }))
 }

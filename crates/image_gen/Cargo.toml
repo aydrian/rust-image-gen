@@ -8,6 +8,8 @@ edition = "2018"
 [dependencies]
 serde = { version = "1.0.130", features = ["derive"] }
 tokio = { version = "1.11.0", features = ["full"] }
-lamedh_http = "0.3.0"
+lambda_runtime = "0.4.1"
+serde_json = "1.0.67"
+http = "0.2.4"
 og_image_writer = { git = "https://github.com/keiya01/og_image_writer", branch = "main" }
 base64 = "0.13.0"
