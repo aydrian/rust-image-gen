@@ -45,7 +45,7 @@ async fn handler(_: Value, _: Context) -> Result<Value, Error> {
 
     let data = writer.into_vec().unwrap();
     println!("Vec<u8>:  {:?}", data);
-    let encoded_data = base64::encode(data);
+    let encoded_data = base64::encode(&data);
     println!("base64 string: {:?}", encoded_data);
 
     Ok(json!({
