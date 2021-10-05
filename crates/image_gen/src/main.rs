@@ -10,7 +10,8 @@ async fn main() -> Result<(), Error> {
     Ok(())
 }
 
-async fn handler(_: Value, _: Context) -> Result<Value, Error> {
+async fn handler(event: Value, _: Context) -> Result<Value, Error> {
+    println!("{:?}", event);
     let text = "This is Open Graphic Image Writer for Web Developer.";
 
     let mut writer = OGImageWriter::new(style::WindowStyle {
